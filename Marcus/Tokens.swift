@@ -18,7 +18,7 @@ let tokenMap: [Character: Token] = [
     ":" : .colon
 ]
 
-func tokenize(_ string: String) {
+func tokenize(_ string: String) -> [Token] {
     var tokens = [Token]()
     for char in string {
         if let ezToken = tokenMap[char] {
@@ -34,5 +34,5 @@ func tokenize(_ string: String) {
             tokens.append(.label(String(char)))
         }
     }
-    
+    return tokens
 }
