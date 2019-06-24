@@ -22,7 +22,7 @@ func parseFunc(_ tokens: [Token]) -> FuncParserResult {
         default:
             return .error(.invalidLabel(label))
         }
-    case .colon, .curlyBrackets, .roundBrackets:
+    case .colon, .curlyBrackets, .roundBrackets, .whitespace:
         return .error(.unexpectedToken(first))
     }
 }

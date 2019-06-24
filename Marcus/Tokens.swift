@@ -4,6 +4,7 @@ enum Token {
         case close
     }
     
+    case whitespace
     case colon
     case roundBrackets(Opennes)
     case curlyBrackets(Opennes)
@@ -15,7 +16,8 @@ let tokenMap: [Character: Token] = [
     "}" : .curlyBrackets(.close),
     "(" : .roundBrackets(.open),
     ")" : .roundBrackets(.close),
-    ":" : .colon
+    ":" : .colon,
+    " " : .whitespace
 ]
 
 func tokenize(_ string: String) -> [Token] {
@@ -26,8 +28,9 @@ func tokenize(_ string: String) -> [Token] {
         } else if let latest = tokens.last {
             switch latest {
             case .label(let oldString):
+                _ = tokens.removeLast()
                 tokens.append(.label(oldString + String(char)))
-            case .colon, .curlyBrackets, .roundBrackets:
+            case .colon, .curlyBrackets, .roundBrackets, .whitespace:
                 tokens.append(.label(String(char)))
             }
         } else {
