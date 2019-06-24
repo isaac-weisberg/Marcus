@@ -1,0 +1,7 @@
+protocol TypeDeclaration {
+    
+}
+
+protocol ErrorTypeDeclaration {
+    
+}
