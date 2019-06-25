@@ -1,5 +1,3 @@
-
-
 struct FunctionDeclaration {
     struct Parameter {
         let outerLabel: String

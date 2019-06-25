@@ -1,17 +1,19 @@
 enum Token {
-    enum Opennes {
-        case open
-        case close
+    enum Symbol {
+        enum Opennes {
+            case open
+            case close
+        }
+        
+        case colon
+        case roundBrackets(Opennes)
+        case curlyBrackets(Opennes)
     }
-    
-    case whitespace
-    case colon
-    case roundBrackets(Opennes)
-    case curlyBrackets(Opennes)
+    case symbol(Symbol)
     case label(String)
 }
 
-let tokenMap: [Character: Token] = [
+let tokenMap: [Character: Token.Symbol] = [
     "{" : .curlyBrackets(.open),
     "}" : .curlyBrackets(.close),
     "(" : .roundBrackets(.open),
@@ -24,15 +26,15 @@ func tokenize(_ string: String) -> [Token] {
     for char in string {
         switch char {
         case "{":
-            tokens.append(.curlyBrackets(.open))
+            tokens.append(.symbol(.curlyBrackets(.open)))
         case "}":
-            tokens.append(.curlyBrackets(.close))
+            tokens.append(.symbol(.curlyBrackets(.close)))
         case "(":
-            tokens.append(.roundBrackets(.open))
+            tokens.append(.symbol(.roundBrackets(.open)))
         case ")":
-            tokens.append(.roundBrackets(.close))
+            tokens.append(.symbol(.roundBrackets(.close)))
         case ":":
-            tokens.append(.colon)
+            tokens.append(.symbol(.colon))
         case " ":
             break
         default:
@@ -41,7 +43,7 @@ func tokenize(_ string: String) -> [Token] {
                 case .label(let oldString):
                     _ = tokens.removeLast()
                     tokens.append(.label(oldString + String(char)))
-                case .colon, .curlyBrackets, .roundBrackets, .whitespace:
+                case .symbol:
                     tokens.append(.label(String(char)))
                 }
             } else {

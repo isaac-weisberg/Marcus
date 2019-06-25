@@ -1,6 +1,6 @@
 
 
 
-func doThing(_ param: Number) -> Number {
+func doThing(param: Number) -> Number {
 
 }
