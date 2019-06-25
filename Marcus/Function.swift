@@ -1,6 +1,5 @@
 struct FunctionDeclaration {
     struct Parameter {
-        let outerLabel: String
         let innerLabel: String
         let type: TypeDeclaration
     }

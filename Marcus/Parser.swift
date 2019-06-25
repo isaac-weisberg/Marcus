@@ -27,19 +27,21 @@ func parseFunc(_ tokens: [Token]) -> FuncParserResult {
     }
 }
 
-enum FuncDeclarationResult {
+enum FuncDeclarationParserResult {
     enum Error {
         case emptyDeclaration
         case expectedLabel(Token)
         case expectedParameterList
+        case incompleteParameterList
         case expectedSymbol(Token, Token.Symbol)
+        case unexpectedSymbol(Token)
     }
     
     case error(Error)
 }
 
-func parseFuncDeclaration(declared tokens: [Token]) -> FuncDeclarationResult {
-    guard let first = tokens.first else {
+func parseFuncDeclaration(declared tokens: inout IndexingIterator<[Token]>) -> FuncDeclarationParserResult {
+    guard let first = tokens.next() else {
         return .error(.emptyDeclaration)
     }
     
@@ -52,13 +54,74 @@ func parseFuncDeclaration(declared tokens: [Token]) -> FuncDeclarationResult {
         return .error(.expectedLabel(first))
     }
     
-    guard let second = tokens.at(safe: 1) else {
+    guard let second = tokens.next() else {
         return .error(.expectedParameterList)
     }
     
     guard case .symbol(let symbol) = second, case .roundBrackets(let bracket) = symbol, case .open = bracket else {
         return .error(.expectedSymbol(second, .roundBrackets(.open)))
     }
+
+    struct ParsedParameter {
+        let name: String
+        let type: String
+    }
     
+    enum ParameterContext {
+        case empty
+        case name(String)
+        case colon(name: String)
+    }
     
+    var context = ParameterContext.empty
+    var parameters = [ParsedParameter]()
+    
+    parameterLoop: repeat {
+        guard let token = tokens.next() else {
+            return .error(.incompleteParameterList)
+        }
+        
+        switch token {
+        case .label(let label):
+            switch context {
+            case .empty:
+                context = .name(label)
+            case .name:
+                return .error(.expectedSymbol(token, .colon))
+            case .colon(let name):
+                parameters.append(ParsedParameter(name: name, type: label))
+                context = .empty
+            }
+        case .symbol(let symbol):
+            switch symbol {
+            case .colon:
+                switch context {
+                case .empty:
+                    return .error(.expectedLabel(token))
+                case .name(let name):
+                    context = .colon(name: name)
+                case .colon:
+                    return .error(.expectedLabel(token))
+                }
+            case .curlyBrackets:
+                return .error(.unexpectedSymbol(token))
+            case .roundBrackets(let openness):
+                switch openness {
+                case .open:
+                    return .error(.unexpectedSymbol(token))
+                case .close:
+                    switch context {
+                    case .empty:
+                        break parameterLoop
+                    case .name:
+                        return .error(.expectedSymbol(token, .colon))
+                    case .colon:
+                        return .error(.expectedLabel(token))
+                    }
+                }
+            }
+            
+            
+        }
+    } while true
 }
