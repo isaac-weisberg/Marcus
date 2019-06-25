@@ -1,6 +1,6 @@
 
 
 
-func doThing(param: Number) -> Number {
+func add(one: Number another: Number) -> Number {
 
 }
