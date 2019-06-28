@@ -125,3 +125,23 @@ func parseFuncDeclaration(declared tokens: inout IndexingIterator<[Token]>) -> F
         }
     } while true
 }
+
+
+enum ParseFuncFuncRes {
+    case empty
+    case beganParameterList
+    case notDetected
+}
+
+func parseFuncFunc(tokens: [Token]) {
+    tokens.reduce(ParseFuncFuncRes.empty) { ctx, token in
+        switch ctx {
+        case .empty:
+            switch token {
+            case .label(let label):
+            }
+        case .notDetected:
+            return .notDetected
+        }
+    }
+}
