@@ -16,50 +16,34 @@ enum Token {
     case label(Label)
 }
 
-let tokenMap: [Character: Token.Symbol] = [
-    "{" : .curlyBrackets(.open),
-    "}" : .curlyBrackets(.close),
-    "(" : .roundBrackets(.open),
-    ")" : .roundBrackets(.close),
-    ":" : .colon
-]
-
 func tokenize(_ string: String) -> [Token] {
     enum ContigiousCtx {
         case empty
         case label([Token.Label.Element])
     }
-    var ctx = ContigiousCtx.empty
     
-    return string.reduce([Token]()) { res, char in
+    return string.reduce(([Token](), ContigiousCtx.empty)) { stuff, char in
+        let (res, ctx) = stuff
         switch char {
         case "{":
-            ctx = .empty
-            return res + [.symbol(.curlyBrackets(.open))]
+            return (res + [.symbol(.curlyBrackets(.open))], .empty)
         case "}":
-            ctx = .empty
-            return res + [.symbol(.curlyBrackets(.close))]
+            return (res + [.symbol(.curlyBrackets(.close))], .empty)
         case "(":
-            ctx = .empty
-            return res + [.symbol(.roundBrackets(.open))]
+            return (res + [.symbol(.roundBrackets(.open))], .empty)
         case ")":
-            ctx = .empty
-            return res + [.symbol(.roundBrackets(.close))]
+            return (res + [.symbol(.roundBrackets(.close))], .empty)
         case ":":
-            ctx = .empty
-            return res + [.symbol(.colon)]
+            return (res + [.symbol(.colon)], .empty)
         case " ":
-            ctx = .empty
-            return res
+            return (res, .empty)
         default:
             switch ctx {
             case .empty:
-                ctx = .label([char])
-                return res
+                return (res, .label([char]))
             case .label(let chars):
-                ctx = .label(chars + [char])
-                return res
+                return (res, .label(chars + [char]))
             }
         }
-    }
+    }.0
 }
