@@ -25,61 +25,41 @@ let tokenMap: [Character: Token.Symbol] = [
 ]
 
 func tokenize(_ string: String) -> [Token] {
-    var tokens = [Token]()
-    for char in string {
+    enum ContigiousCtx {
+        case empty
+        case label([Token.Label.Element])
+    }
+    var ctx = ContigiousCtx.empty
+    
+    return string.reduce([Token]()) { res, char in
         switch char {
         case "{":
-            tokens.append(.symbol(.curlyBrackets(.open)))
+            ctx = .empty
+            return res + [.symbol(.curlyBrackets(.open))]
         case "}":
-            tokens.append(.symbol(.curlyBrackets(.close)))
+            ctx = .empty
+            return res + [.symbol(.curlyBrackets(.close))]
         case "(":
-            tokens.append(.symbol(.roundBrackets(.open)))
+            ctx = .empty
+            return res + [.symbol(.roundBrackets(.open))]
         case ")":
-            tokens.append(.symbol(.roundBrackets(.close)))
+            ctx = .empty
+            return res + [.symbol(.roundBrackets(.close))]
         case ":":
-            tokens.append(.symbol(.colon))
+            ctx = .empty
+            return res + [.symbol(.colon)]
         case " ":
-            break
+            ctx = .empty
+            return res
         default:
-            if let latest = tokens.last {
-                switch latest {
-                case .label(let oldString):
-                    _ = tokens.removeLast()
-                    tokens.append(.label(oldString + String(char)))
-                case .symbol:
-                    tokens.append(.label(String(char)))
-                }
-            } else {
-                tokens.append(.label(String(char)))
+            switch ctx {
+            case .empty:
+                ctx = .label([char])
+                return res
+            case .label(let chars):
+                ctx = .label(chars + [char])
+                return res
             }
         }
     }
-    return tokens
-}
-
-enum TokenizeLabelResult {
-    case success(Token.Label)
-    case expectedLabel
-}
-
-func tokenizeLabel(iterator: inout FullIterator<Character>) -> TokenizeLabelResult {
-    let nonLabelChars = "{}(): "
-    var chars = [String.Element]()
-    
-    repeat {
-        guard let next = iterator.next() else {
-            break
-        }
-        if nonLabelChars.contains(next) {
-            break
-        }
-        chars.append(next)
-    } while true
-    
-    _ = iterator.prev()
-    
-    guard chars.count > 0 else {
-        return .expectedLabel
-    }
-    return .success(Token.Label(chars))
 }
