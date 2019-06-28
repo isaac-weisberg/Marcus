@@ -13,6 +13,7 @@
 		FA8A4D8A22C0FBA400FA5031 /* Type.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8A4D8922C0FBA400FA5031 /* Type.swift */; };
 		FA8A4D8C22C0FD4D00FA5031 /* Tokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8A4D8B22C0FD4D00FA5031 /* Tokens.swift */; };
 		FA8A4D8E22C10F5800FA5031 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8A4D8D22C10F5800FA5031 /* Parser.swift */; };
+		FAEB4A6322C5EBE800F235AF /* MoreIterator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAEB4A6222C5EBE800F235AF /* MoreIterator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		FA8A4D8922C0FBA400FA5031 /* Type.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Type.swift; sourceTree = "<group>"; };
 		FA8A4D8B22C0FD4D00FA5031 /* Tokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tokens.swift; sourceTree = "<group>"; };
 		FA8A4D8D22C10F5800FA5031 /* Parser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
+		FAEB4A6222C5EBE800F235AF /* MoreIterator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreIterator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +65,7 @@
 				FA8A4D8B22C0FD4D00FA5031 /* Tokens.swift */,
 				FA8A4D8D22C10F5800FA5031 /* Parser.swift */,
 				FA09EB3B22C26930006D5FCE /* Array+at.swift */,
+				FAEB4A6222C5EBE800F235AF /* MoreIterator.swift */,
 			);
 			path = Marcus;
 			sourceTree = "<group>";
@@ -148,6 +151,7 @@
 			files = (
 				FA09EB3C22C26930006D5FCE /* Array+at.swift in Sources */,
 				FA8A4D8E22C10F5800FA5031 /* Parser.swift in Sources */,
+				FAEB4A6322C5EBE800F235AF /* MoreIterator.swift in Sources */,
 				FA8A4D8622C0FAD400FA5031 /* Function.swift in Sources */,
 				FA8A4D8A22C0FBA400FA5031 /* Type.swift in Sources */,
 				FA8A4D8C22C0FD4D00FA5031 /* Tokens.swift in Sources */,

@@ -1,4 +1,6 @@
 enum Token {
+    typealias Label = String
+    
     enum Symbol {
         enum Opennes {
             case open
@@ -9,8 +11,9 @@ enum Token {
         case roundBrackets(Opennes)
         case curlyBrackets(Opennes)
     }
+    
     case symbol(Symbol)
-    case label(String)
+    case label(Label)
 }
 
 let tokenMap: [Character: Token.Symbol] = [
@@ -52,4 +55,31 @@ func tokenize(_ string: String) -> [Token] {
         }
     }
     return tokens
+}
+
+enum TokenizeLabelResult {
+    case success(Token.Label)
+    case expectedLabel
+}
+
+func tokenizeLabel(iterator: inout FullIterator<Character>) -> TokenizeLabelResult {
+    let nonLabelChars = "{}(): "
+    var chars = [String.Element]()
+    
+    repeat {
+        guard let next = iterator.next() else {
+            break
+        }
+        if nonLabelChars.contains(next) {
+            break
+        }
+        chars.append(next)
+    } while true
+    
+    _ = iterator.prev()
+    
+    guard chars.count > 0 else {
+        return .expectedLabel
+    }
+    return .success(Token.Label(chars))
 }
