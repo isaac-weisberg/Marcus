@@ -128,20 +128,38 @@ func parseFuncDeclaration(declared tokens: inout IndexingIterator<[Token]>) -> F
 
 
 enum ParseFuncFuncRes {
-    case empty
-    case beganParameterList
-    case notDetected
+    enum Error {
+        enum NameParsing {
+            case expectedLabel(Token)
+        }
+        
+        case nameDeclaration(NameParsing)
+    }
+    
+    enum State {
+        case named(String)
+        case idle
+    }
+    
+    case good(State)
+    case erroneous(Error, State)
 }
 
-func parseFuncFunc(tokens: [Token]) {
-    tokens.reduce(ParseFuncFuncRes.empty) { ctx, token in
+func parseFuncFunc(tokens: [Token]) -> ParseFuncFuncRes {
+    tokens.reduce(ParseFuncFuncRes.good(.idle)) { ctx, token in
         switch ctx {
-        case .empty:
-            switch token {
-            case .label(let label):
+        case .erroneous:
+            return ctx
+        case .good(let state):
+            switch state {
+            case .idle:
+                switch token {
+                case .label(let label):
+                    return .good(.named(label))
+                case .symbol:
+                    return .erroneous(.nameDeclaration(.expectedLabel(token)), state)
+                }
             }
-        case .notDetected:
-            return .notDetected
         }
     }
 }
