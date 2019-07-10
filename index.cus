@@ -1,6 +1,1 @@
-
-
-
-func add(one: Number another: Number) -> Number {
-
-}
+(+ 3 5)

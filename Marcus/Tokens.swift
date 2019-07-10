@@ -7,9 +7,7 @@ enum Token {
             case close
         }
         
-        case colon
         case roundBrackets(Opennes)
-        case curlyBrackets(Opennes)
     }
     
     case symbol(Symbol)
@@ -25,16 +23,10 @@ func tokenize(_ string: String) -> [Token] {
     return string.reduce(([Token](), ContigiousCtx.empty)) { stuff, char in
         let (res, ctx) = stuff
         switch char {
-        case "{":
-            return (res + [.symbol(.curlyBrackets(.open))], .empty)
-        case "}":
-            return (res + [.symbol(.curlyBrackets(.close))], .empty)
         case "(":
             return (res + [.symbol(.roundBrackets(.open))], .empty)
         case ")":
             return (res + [.symbol(.roundBrackets(.close))], .empty)
-        case ":":
-            return (res + [.symbol(.colon)], .empty)
         case " ":
             return (res, .empty)
         default:
