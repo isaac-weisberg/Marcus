@@ -1,18 +1,28 @@
 func parse(tokens: [Token]) -> Expression {
-    tokens.reduce([Context]()) { ctx, token in
+    enum Node {
+        case label(String)
+        case node([Node])
+    }
+    
+    tokens.reduce([Node]()) { ctx, token in
         switch token {
         case .symbol(let symbol):
             switch symbol {
             case .roundBrackets(let openness):
                 switch openness {
                 case .open:
-                    return ctx
+                    let newNode = Node.node([])
+                    return ctx + [ newNode ]
                 case .close:
-                    return ctx
+                    
                 }
             }
         case .label(let label):
-            return ctx
+            guard let last = ctx.last else {
+                let newNode = Node.node([ .label(label) ])
+                return ctx + [ newNode ]
+            }
+            
         }
     }
     
